@@ -1,0 +1,284 @@
+.container {
+  min-height: 100vh;
+  background-color: #f1f4ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-card {
+  display: flex;
+  max-width: 900px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  animation: fadeSlide 0.5s ease;
+}
+
+.login-form-container {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  color: #1e293b;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  position: relative;
+ 
+}
+
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  outline: none;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-top: 8px;
+  color: #374151;
+}
+
+.remember-me input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #1d4ed8;
+}
+
+.register-text {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+  color: #374151;
+}
+
+.register-text a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+.register-text a:hover {
+  text-decoration: underline;
+}
+
+.login-image-container {
+  flex: 1;
+  background: linear-gradient(to top right, #73f05a, #0a4e10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-image-container img {
+  max-width: 80%;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  animation: popIn 0.5s ease;
+}
+
+/* SweetAlert2 Custom Styling */
+.custom-swal-popup {
+  font-family: 'Segoe UI', 'Roboto', sans-serif !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(37, 99, 235, 0.1) !important;
+}
+
+.custom-swal-title {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  font-size: 24px !important;
+}
+
+.custom-swal-content {
+  color: #374151 !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+
+/* Override SweetAlert2 default styles */
+.swal2-popup {
+  font-family: 'Segoe UI', 'Roboto', sans-serif !important;
+}
+
+.swal2-confirm {
+  background-color: #2563eb !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  font-size: 15px !important;
+  transition: all 0.3s ease !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #1d4ed8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Error icon styling */
+.swal2-error {
+  border-color: #ef4444 !important;
+}
+
+.swal2-error .swal2-x-mark {
+  stroke: #ef4444 !important;
+}
+
+/* Success icon styling */
+.swal2-success {
+  border-color: #10b981 !important;
+}
+
+.swal2-success [class^='swal2-success-line'] {
+  background-color: #10b981 !important;
+}
+
+.swal2-success .swal2-success-ring {
+  border-color: #10b981 !important;
+}
+
+/* Warning icon styling */
+.swal2-warning {
+  border-color: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+/* Toast styling for success messages */
+.swal2-toast {
+  background: rgba(240, 249, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(37, 99, 235, 0.2) !important;
+  border-left: 4px solid #10b981 !important;
+}
+
+.swal2-toast .swal2-title {
+  color: #1e293b !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+.swal2-toast .swal2-content {
+  color: #374151 !important;
+  font-size: 14px !important;
+}
+
+/* Animation classes (if you want to add animate.css) */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+.animate__animated {
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+}
+
+.animate__fadeInDown {
+  animation-name: fadeInDown;
+}
+
+.animate__fadeOutUp {
+  animation-name: fadeOutUp;
+}
+/* Animations */
+@keyframes fadeSlide {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-card {
+    flex-direction: column;
+  }
+
+  .login-image-container {
+    border-top: 1px solid #eee;
+  }
+}
