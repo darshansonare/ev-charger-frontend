@@ -47,7 +47,7 @@ export default function RegisterForm() {
     }
 
     try {
-      await axios.post('http://localhost:3000/api/register', {
+      await axios.post('http://ev-charger-backend-production.up.railway.app/api/register', {
         username: username.value,
         password: password.value
       });
