@@ -3,11 +3,12 @@
   <div class="container">
     <div class="login-card">
       <!-- Left: Login Form -->
+  
       <div class="login-form-container">
         <h2 class="title">LOGIN</h2>
-        <p class="subtitle">Access your dashboard to manage EV charging stations</p>
+        <p class="subtitle">Discover nearby EV stations and manage your charging network</p>
 
-        <form @submit.prevent="login">
+             <form @submit.prevent="login" class="form-wrapperr">
           <input v-model="username" type="text" placeholder="Username" required />
           <input v-model="password" type="password" placeholder="Password" required />
 

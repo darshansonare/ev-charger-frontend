@@ -4,8 +4,8 @@
 
     <div class="card">
       <div class="header-row">
-        <h2 class="title2">All EV Chargers</h2>
-        <input v-model="searchTerm" placeholder="Search..." class="search-input" />
+        <h2 class="title2">All ev chargers</h2>
+        <input v-model="searchTerm" placeholder="Search by charger name..." class="search-input" />
       </div>
 
       <table class="styled-table">

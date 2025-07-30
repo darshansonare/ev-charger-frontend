@@ -40,21 +40,20 @@ export default {
   },
   methods: {
     async addCharger() {
-      // Client-side validation
-      if (!this.validateForm()) {
-        return;
-      }
+      if (!this.validateForm()) return;
 
       const token = localStorage.getItem('token');
-      
-      // Check if user is authenticated
       if (!token) {
         await Swal.fire({
           icon: 'error',
           title: 'Authentication Required',
           text: 'Please login to continue',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#4f46e5'
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showConfirmButton: false,
+          background: '#fef2f2',
+          color: '#991b1b'
         });
         return;
       }
@@ -68,7 +67,6 @@ export default {
         longitude: parseFloat(this.longitude)
       };
 
-      // Show loading alert
       Swal.fire({
         title: this.id ? 'Updating Charger...' : 'Adding Charger...',
         text: 'Please wait while we process your request',
@@ -81,179 +79,126 @@ export default {
       });
 
       try {
-        let response;
         if (this.id) {
-          response = await axios.put(`http://localhost:3000/api/chargers/${this.id}`, chargerData, { headers });
+          await axios.put(`http://localhost:3000/api/chargers/${this.id}`, chargerData, { headers });
         } else {
-          response = await axios.post(`http://localhost:3000/api/chargers`, chargerData, { headers });
+          await axios.post(`http://localhost:3000/api/chargers`, chargerData, { headers });
         }
 
-        // Success alert
         await Swal.fire({
           icon: 'success',
           title: this.id ? 'Charger Updated!' : 'Charger Added!',
-          text: this.id ? 
-            `${this.name} has been successfully updated` : 
-            `${this.name} has been successfully added to your network`,
-          confirmButtonText: 'Great!',
-          confirmButtonColor: '#4f46e5',
-          background: '#ffffff',
-          color: '#1e293b',
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          },
-          customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            content: 'custom-swal-content'
-          }
+          text: `${this.name} has been successfully ${this.id ? 'updated' : 'added to your network'}`,
+          toast: true,
+          position: 'top-end',
+          timer: 2500,
+          showConfirmButton: false,
+          background: '#f0fdf4',
+          color: '#065f46'
         });
 
-        // Emit events and reset form
         this.$emit('refresh');
-        this.$emit('edit', null);
-        this.resetForm();
+        this.$emit('edit', 'success'); // 👍 emit success instead of null
+        this.resetForm(false);
 
       } catch (err) {
         console.error('Error submitting charger:', err);
-        
         let errorTitle = this.id ? 'Update Failed' : 'Addition Failed';
         let errorMessage = 'Something went wrong. Please try again.';
-        
+
         if (err.response) {
-          switch (err.response.status) {
-            case 400:
-              errorTitle = 'Invalid Data';
-              errorMessage = 'Please check all fields and ensure coordinates are valid numbers.';
-              break;
-            case 401:
-              errorTitle = 'Unauthorized';
-              errorMessage = 'Your session has expired. Please login again.';
-              break;
-            case 403:
-              errorTitle = 'Access Denied';
-              errorMessage = 'You don\'t have permission to perform this action.';
-              break;
-            case 404:
-              errorTitle = 'Charger Not Found';
-              errorMessage = 'The charger you\'re trying to update no longer exists.';
-              break;
-            case 409:
-              errorTitle = 'Duplicate Entry';
-              errorMessage = 'A charger with this name or location already exists.';
-              break;
-            case 422:
-              errorTitle = 'Validation Error';
-              errorMessage = err.response.data?.message || 'Please check your input data.';
-              break;
-            case 500:
-              errorTitle = 'Server Error';
-              errorMessage = 'Our servers are experiencing issues. Please try again later.';
-              break;
-            default:
-              errorMessage = err.response.data?.message || errorMessage;
-          }
+          const status = err.response.status;
+          errorTitle = {
+            400: 'Invalid Data',
+            401: 'Unauthorized',
+            403: 'Access Denied',
+            404: 'Charger Not Found',
+            409: 'Duplicate Entry',
+            422: 'Validation Error',
+            500: 'Server Error'
+          }[status] || errorTitle;
+
+          errorMessage = err.response.data?.message || errorMessage;
         } else if (err.request) {
           errorTitle = 'Connection Error';
           errorMessage = 'Unable to connect to server. Please check your internet connection.';
         }
 
-        // Error alert with retry option
-        const result = await Swal.fire({
+        await Swal.fire({
           icon: 'error',
           title: errorTitle,
           text: errorMessage,
-          showCancelButton: true,
-          confirmButtonText: 'Try Again',
-          cancelButtonText: 'Cancel',
-          confirmButtonColor: '#4f46e5',
-          cancelButtonColor: '#6b7280',
-          background: '#ffffff',
-          color: '#1e293b',
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          },
-          customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            content: 'custom-swal-content'
-          }
+          toast: true,
+          position: 'top-end',
+          timer: 4000,
+          showConfirmButton: false,
+          background: '#fef2f2',
+          color: '#991b1b'
         });
-
-        // If user wants to try again, don't close the form
-        if (!result.isConfirmed) {
-          this.handleClose();
-        }
       }
     },
 
     validateForm() {
-      // Check for empty fields
-      if (!this.name.trim() || !this.status.trim() || !this.location.trim() || 
+      if (!this.name.trim() || !this.status.trim() || !this.location.trim() ||
           !this.latitude || !this.longitude) {
         Swal.fire({
           icon: 'warning',
           title: 'Missing Information',
           text: 'Please fill in all required fields',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#4f46e5'
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showConfirmButton: false,
+          background: '#fefce8',
+          color: '#92400e'
         });
         return false;
       }
 
-      // Validate charger name
       if (this.name.trim().length < 3) {
         Swal.fire({
           icon: 'warning',
           title: 'Invalid Charger Name',
           text: 'Charger name must be at least 3 characters long',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#4f46e5'
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showConfirmButton: false,
+          background: '#fefce8',
+          color: '#92400e'
         });
         return false;
       }
 
-      // Validate coordinates
       const lat = parseFloat(this.latitude);
       const lng = parseFloat(this.longitude);
-      
+
       if (isNaN(lat) || isNaN(lng)) {
         Swal.fire({
           icon: 'warning',
           title: 'Invalid Coordinates',
           text: 'Please enter valid numbers for latitude and longitude',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#4f46e5'
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showConfirmButton: false,
+          background: '#fefce8',
+          color: '#92400e'
         });
         return false;
       }
 
-      // Validate latitude range (-90 to 90)
-      if (lat < -90 || lat > 90) {
+      if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
         Swal.fire({
           icon: 'warning',
-          title: 'Invalid Latitude',
-          text: 'Latitude must be between -90 and 90 degrees',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#4f46e5'
-        });
-        return false;
-      }
-
-      // Validate longitude range (-180 to 180)
-      if (lng < -180 || lng > 180) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Longitude',
-          text: 'Longitude must be between -180 and 180 degrees',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#4f46e5'
+          title: 'Invalid Latitude or Longitude',
+          text: 'Latitude must be between -90 and 90. Longitude must be between -180 and 180.',
+          toast: true,
+          position: 'top-end',
+          timer: 3000,
+          showConfirmButton: false,
+          background: '#fefce8',
+          color: '#92400e'
         });
         return false;
       }
@@ -261,13 +206,12 @@ export default {
       return true;
     },
 
-    async resetForm() {
-      // Show confirmation dialog when editing
-      if (this.id) {
+    async resetForm(showCancel = true) {
+      if (this.id && showCancel) {
         const result = await Swal.fire({
           icon: 'question',
           title: 'Cancel Editing?',
-          text: 'Are you sure you want to cancel? Any unsaved changes will be lost.',
+          text: 'Are you sure you want to cancel? Unsaved changes will be lost.',
           showCancelButton: true,
           confirmButtonText: 'Yes, Cancel',
           cancelButtonText: 'Continue Editing',
@@ -277,38 +221,21 @@ export default {
           color: '#1e293b'
         });
 
-        if (!result.isConfirmed) {
-          return;
-        }
+        if (!result.isConfirmed) return;
       }
 
-      // Reset form data
       this.name = '';
       this.status = '';
       this.location = '';
       this.latitude = '';
       this.longitude = '';
       this.id = null;
-      this.$emit('edit', null);
 
-      // Show reset confirmation for standalone form
-      if (!this.isModal) {
-        Swal.fire({
-          icon: 'info',
-          title: 'Form Reset',
-          text: 'All fields have been cleared',
-          timer: 1500,
-          showConfirmButton: false,
-          toast: true,
-          position: 'top-end',
-          background: '#f0f9ff',
-          color: '#1e293b'
-        });
-      }
+      this.$emit('edit', 'cancel'); // 👍 emit cancel instead of null
     },
 
     handleClose() {
-      this.$emit('edit', null);
+      this.$emit('edit', 'cancel'); // fallback handler
     }
   }
 };
