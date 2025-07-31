@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://mapcharge.netlify.app', // uses the env variable
+  baseURL: 'ev-charger-backend-production-37a9.up.railway.app:8080', // uses the env variable
 });
 
 instance.interceptors.request.use(

@@ -9,6 +9,7 @@ export default function RegisterForm() {
   const router = useRouter();
 
   const register = async () => {
+    debugger
     // Basic validation
     if (!username.value || !password.value) {
       await Swal.fire({
