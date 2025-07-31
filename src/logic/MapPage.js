@@ -14,17 +14,14 @@ export default {
     this.fetchChargers();
   },
   methods: {
-    async fetchChargers() {
-      const token = localStorage.getItem('token');
+   async fetchChargers() {
       try {
-        const res = await axios.get('http://localhost:3000/api/chargers', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        this.chargers = res.data;
-      } catch (err) {
-        console.error('Failed to fetch chargers:', err);
-      }
+    const res = await axios.get('https://ev-charger-backend-l1c8.onrender.com/api/chargers'); // baseURL is already set
+    this.chargers = res.data;
+     } catch (err) {
+    console.error('Failed to fetch chargers:', err);
     }
+   }
   }
 };
 

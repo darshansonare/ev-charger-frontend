@@ -1,9 +1,8 @@
 // File: src/logic/RegisterForm.js
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-
+import axios from 'axios';
 export default function RegisterForm() {
   const username = ref('');
   const password = ref('');
@@ -47,10 +46,10 @@ export default function RegisterForm() {
     }
 
     try {
-      await axios.post('http://ev-charger-backend-production.up.railway.app/api/register', {
-        username: username.value,
-        password: password.value
-      });
+     await axios.post('https://ev-charger-backend-l1c8.onrender.com/api/register', {
+               username: username.value,
+               password: password.value
+          }); 
       
       // Success alert with redirect confirmation
       const result = await Swal.fire({
