@@ -1,6 +1,6 @@
 import Navbar from '../components/Navbar.vue';
 import ChargerForm from '../views/ChargerForm.vue';
-import axios from '../utils/axios';
+import axios from '../axios';
 import Swal from 'sweetalert2';
 
 export default {

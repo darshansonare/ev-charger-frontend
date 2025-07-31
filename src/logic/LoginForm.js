@@ -1,7 +1,7 @@
 // File: src/logic/LoginForm.js
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from '../utils/axios';
+import axios from '../axios';
 import Swal from 'sweetalert2';
 
 export default function LoginForm() {

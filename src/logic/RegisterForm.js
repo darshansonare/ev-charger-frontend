@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
-import axios from '../utils/axios';
+import axios from '../axios';
 export default function RegisterForm() {
   const username = ref('');
   const password = ref('');

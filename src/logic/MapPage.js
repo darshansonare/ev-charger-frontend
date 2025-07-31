@@ -1,6 +1,6 @@
 import Navbar from '../components/Navbar.vue';
 import MapView from '../components/MapView.vue';
-import axios from '../utils/axios';
+import axios from '../axios';
 
 
 export default {

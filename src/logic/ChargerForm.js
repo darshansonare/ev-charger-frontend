@@ -1,5 +1,5 @@
 // File: src/logic/ChargerForm.js
-import axios from '../utils/axios';
+import axios from '../axios';
 import Navbar from '../components/Navbar.vue';
 import Swal from 'sweetalert2';
 
