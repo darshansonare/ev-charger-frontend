@@ -1,6 +1,6 @@
 import Navbar from '../components/Navbar.vue';
 import ChargerForm from '../views/ChargerForm.vue';
-import axios from 'axios';
+import axios from '../utils/axios';
 import Swal from 'sweetalert2';
 
 export default {
@@ -28,11 +28,8 @@ export default {
   },
   methods: {
     async fetchChargers() {
-      const token = localStorage.getItem('token');
       try {
-        const res = await axios.get('http://localhost:3000/api/chargers', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await axios.get('/api/chargers');
         this.chargers = res.data;
       } catch (err) {
         console.error('Error fetching chargers:', err);
@@ -53,11 +50,8 @@ export default {
 
       if (!result.isConfirmed) return;
 
-      const token = localStorage.getItem('token');
       try {
-        await axios.delete(`http://localhost:3000/api/chargers/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.delete(`/api/chargers/${id}`);
         this.fetchChargers();
         Swal.fire({
           icon: 'success',

@@ -1,5 +1,5 @@
 // File: src/logic/ChargerForm.js
-import axios from 'axios';
+import axios from '../utils/axios';
 import Navbar from '../components/Navbar.vue';
 import Swal from 'sweetalert2';
 
@@ -27,12 +27,7 @@ export default {
     chargerToEdit: {
       handler(newVal) {
         if (newVal) {
-          this.name = newVal.name;
-          this.status = newVal.status;
-          this.location = newVal.location;
-          this.latitude = newVal.latitude;
-          this.longitude = newVal.longitude;
-          this.id = newVal.id;
+          Object.assign(this, { ...newVal });
         }
       },
       immediate: true
@@ -44,25 +39,15 @@ export default {
 
       const token = localStorage.getItem('token');
       if (!token) {
-        await Swal.fire({
-          icon: 'error',
-          title: 'Authentication Required',
-          text: 'Please login to continue',
-          toast: true,
-          position: 'top-end',
-          timer: 3000,
-          showConfirmButton: false,
-          background: '#fef2f2',
-          color: '#991b1b'
-        });
+        await this.showAlert('error', 'Authentication Required', 'Please login to continue');
         return;
       }
 
       const headers = { Authorization: `Bearer ${token}` };
       const chargerData = {
-        name: this.name,
-        status: this.status,
-        location: this.location,
+        name: this.name.trim(),
+        status: this.status.trim(),
+        location: this.location.trim(),
         latitude: parseFloat(this.latitude),
         longitude: parseFloat(this.longitude)
       };
@@ -73,17 +58,14 @@ export default {
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
+        didOpen: () => Swal.showLoading()
       });
 
       try {
-        if (this.id) {
-          await axios.put(`http://localhost:3000/api/chargers/${this.id}`, chargerData, { headers });
-        } else {
-          await axios.post(`http://localhost:3000/api/chargers`, chargerData, { headers });
-        }
+        const url = this.id ? `/api/chargers/${this.id}` : '/api/chargers';
+        const method = this.id ? 'put' : 'post';
+
+        await axios[method](url, chargerData, { headers });
 
         await Swal.fire({
           icon: 'success',
@@ -98,108 +80,50 @@ export default {
         });
 
         this.$emit('refresh');
-        this.$emit('edit', 'success'); // 👍 emit success instead of null
+        this.$emit('edit', 'success');
         this.resetForm(false);
 
       } catch (err) {
         console.error('Error submitting charger:', err);
-        let errorTitle = this.id ? 'Update Failed' : 'Addition Failed';
-        let errorMessage = 'Something went wrong. Please try again.';
 
-        if (err.response) {
-          const status = err.response.status;
-          errorTitle = {
-            400: 'Invalid Data',
-            401: 'Unauthorized',
-            403: 'Access Denied',
-            404: 'Charger Not Found',
-            409: 'Duplicate Entry',
-            422: 'Validation Error',
-            500: 'Server Error'
-          }[status] || errorTitle;
+        const status = err.response?.status;
+        const defaultMsg = 'Something went wrong. Please try again.';
+        const titleMap = {
+          400: 'Invalid Data',
+          401: 'Unauthorized',
+          403: 'Access Denied',
+          404: 'Charger Not Found',
+          409: 'Duplicate Entry',
+          422: 'Validation Error',
+          500: 'Server Error'
+        };
 
-          errorMessage = err.response.data?.message || errorMessage;
-        } else if (err.request) {
-          errorTitle = 'Connection Error';
-          errorMessage = 'Unable to connect to server. Please check your internet connection.';
-        }
+        const errorTitle = titleMap[status] || (this.id ? 'Update Failed' : 'Addition Failed');
+        const errorMessage = err.response?.data?.message || err.message || defaultMsg;
 
-        await Swal.fire({
-          icon: 'error',
-          title: errorTitle,
-          text: errorMessage,
-          toast: true,
-          position: 'top-end',
-          timer: 4000,
-          showConfirmButton: false,
-          background: '#fef2f2',
-          color: '#991b1b'
-        });
+        await this.showAlert('error', errorTitle, errorMessage);
       }
     },
 
     validateForm() {
-      if (!this.name.trim() || !this.status.trim() || !this.location.trim() ||
-          !this.latitude || !this.longitude) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Missing Information',
-          text: 'Please fill in all required fields',
-          toast: true,
-          position: 'top-end',
-          timer: 3000,
-          showConfirmButton: false,
-          background: '#fefce8',
-          color: '#92400e'
-        });
-        return false;
-      }
-
-      if (this.name.trim().length < 3) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Charger Name',
-          text: 'Charger name must be at least 3 characters long',
-          toast: true,
-          position: 'top-end',
-          timer: 3000,
-          showConfirmButton: false,
-          background: '#fefce8',
-          color: '#92400e'
-        });
-        return false;
-      }
-
+      const name = this.name.trim();
+      const status = this.status.trim();
+      const location = this.location.trim();
       const lat = parseFloat(this.latitude);
       const lng = parseFloat(this.longitude);
 
-      if (isNaN(lat) || isNaN(lng)) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Coordinates',
-          text: 'Please enter valid numbers for latitude and longitude',
-          toast: true,
-          position: 'top-end',
-          timer: 3000,
-          showConfirmButton: false,
-          background: '#fefce8',
-          color: '#92400e'
-        });
+      if (!name || !status || !location || isNaN(lat) || isNaN(lng)) {
+        this.showAlert('warning', 'Missing Information', 'Please fill in all required fields');
+        return false;
+      }
+
+      if (name.length < 3) {
+        this.showAlert('warning', 'Invalid Charger Name', 'Charger name must be at least 3 characters long');
         return false;
       }
 
       if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Latitude or Longitude',
-          text: 'Latitude must be between -90 and 90. Longitude must be between -180 and 180.',
-          toast: true,
-          position: 'top-end',
-          timer: 3000,
-          showConfirmButton: false,
-          background: '#fefce8',
-          color: '#92400e'
-        });
+        this.showAlert('warning', 'Invalid Coordinates', 'Latitude must be between -90 and 90. Longitude must be between -180 and 180.');
         return false;
       }
 
@@ -231,11 +155,25 @@ export default {
       this.longitude = '';
       this.id = null;
 
-      this.$emit('edit', 'cancel'); // 👍 emit cancel instead of null
+      this.$emit('edit', 'cancel');
     },
 
     handleClose() {
-      this.$emit('edit', 'cancel'); // fallback handler
+      this.$emit('edit', 'cancel');
+    },
+
+    async showAlert(icon, title, text) {
+      await Swal.fire({
+        icon,
+        title,
+        text,
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        showConfirmButton: false,
+        background: icon === 'error' ? '#fef2f2' : '#fefce8',
+        color: icon === 'error' ? '#991b1b' : '#92400e'
+      });
     }
   }
 };

@@ -1,6 +1,8 @@
+// File: src/views/ChargerListPage.vue or wherever this file is
+
 import Navbar from '../components/Navbar.vue';
 import ChargerForm from '../views/ChargerForm.vue';
-import axios from 'axios';
+import axios from '../utils/axios';// ✅ Use your axios instance
 
 export default {
   components: { Navbar, ChargerForm },
@@ -25,15 +27,10 @@ export default {
   mounted() {
     this.fetchChargers();
   },
-
-  // ✅ Add these methods below
   methods: {
     async fetchChargers() {
-      const token = localStorage.getItem('token');
       try {
-        const res = await axios.get('http://localhost:3000/api/chargers', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await axios.get('/api/chargers'); // ✅ Base URL handled in axios instance
         this.chargers = res.data;
       } catch (err) {
         console.error('Error fetching chargers:', err);
@@ -41,22 +38,22 @@ export default {
     },
 
     async deleteCharger(id) {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:3000/api/chargers/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      this.fetchChargers();
+      try {
+        await axios.delete(`/api/chargers/${id}`); // ✅ Simplified
+        this.fetchChargers();
+      } catch (err) {
+        console.error('Error deleting charger:', err);
+      }
     },
 
-    // ✅ THESE TWO ARE THE ONES YOU ASKED ABOUT
     editCharger(charger) {
-      this.selectedCharger = charger; // Pass data to ChargerForm
-      this.showModal = true;          // Show modal
+      this.selectedCharger = charger;
+      this.showModal = true;
     },
 
     closeModal() {
-      this.showModal = false;         // Hide modal
-      this.selectedCharger = null;    // Clear data
+      this.showModal = false;
+      this.selectedCharger = null;
     }
   }
 };

@@ -1,7 +1,7 @@
-
 import Navbar from '../components/Navbar.vue';
 import MapView from '../components/MapView.vue';
-import axios from 'axios';
+import axios from '../utils/axios';
+
 
 export default {
   components: { Navbar, MapView },
@@ -14,15 +14,13 @@ export default {
     this.fetchChargers();
   },
   methods: {
-   async fetchChargers() {
+    async fetchChargers() {
       try {
-    const res = await axios.get('http://localhost:3000/api/chargers'); // baseURL is already set
-    this.chargers = res.data;
-     } catch (err) {
-    console.error('Failed to fetch chargers:', err);
+        const res = await axios.get('/api/chargers');
+        this.chargers = res.data;
+      } catch (err) {
+        console.error('Failed to fetch chargers:', err);
+      }
     }
-   }
   }
 };
-
-

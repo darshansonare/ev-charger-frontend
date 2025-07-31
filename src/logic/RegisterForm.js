@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import axios from '../utils/axios';
 export default function RegisterForm() {
   const username = ref('');
   const password = ref('');
@@ -46,7 +46,7 @@ export default function RegisterForm() {
     }
 
     try {
-     await axios.post('http://localhost:3000/api/register', {
+    await axios.post('/api/register', {
                username: username.value,
                password: password.value
           }); 

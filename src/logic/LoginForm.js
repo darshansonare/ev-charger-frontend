@@ -1,7 +1,7 @@
 // File: src/logic/LoginForm.js
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import axios from '../utils/axios';
 import Swal from 'sweetalert2';
 
 export default function LoginForm() {
@@ -26,10 +26,10 @@ export default function LoginForm() {
   }
 
   try {
-    const res = await axios.post('http://localhost:3000/api/login', {
-      username: username.value,
-      password: password.value
-    });
+    const res = await axios.post('/api/login', {
+  username: username.value,
+  password: password.value
+});
 
     await Swal.fire({
       icon: 'success',
