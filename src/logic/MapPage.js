@@ -16,7 +16,7 @@ export default {
   methods: {
    async fetchChargers() {
       try {
-    const res = await axios.get('https://ev-charger-backend-l1c8.onrender.com/api/chargers'); // baseURL is already set
+    const res = await axios.get('http://localhost:3000/api/chargers'); // baseURL is already set
     this.chargers = res.data;
      } catch (err) {
     console.error('Failed to fetch chargers:', err);

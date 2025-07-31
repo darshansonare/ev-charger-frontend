@@ -55,7 +55,7 @@ export default {
 
       const token = localStorage.getItem('token');
       try {
-        await axios.delete(`https://ev-charger-backend-l1c8.onrender.com/api/chargers/${id}`, {
+        await axios.delete(`http://localhost:3000/api/chargers/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.fetchChargers();

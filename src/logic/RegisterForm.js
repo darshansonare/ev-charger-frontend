@@ -46,7 +46,7 @@ export default function RegisterForm() {
     }
 
     try {
-     await axios.post('https://ev-charger-backend-l1c8.onrender.com/api/register', {
+     await axios.post('http://localhost:3000/api/register', {
                username: username.value,
                password: password.value
           }); 

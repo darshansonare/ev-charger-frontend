@@ -31,7 +31,7 @@ export default {
     async fetchChargers() {
       const token = localStorage.getItem('token');
       try {
-        const res = await axios.get('https://ev-charger-backend-l1c8.onrender.com/api/chargers', {
+        const res = await axios.get('http://localhost:3000/api/chargers', {
           headers: { Authorization: `Bearer ${token}` }
         });
         this.chargers = res.data;
@@ -42,7 +42,7 @@ export default {
 
     async deleteCharger(id) {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://ev-charger-backend-l1c8.onrender.com/api/chargers/${id}`, {
+      await axios.delete(`http://localhost:3000/api/chargers/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       this.fetchChargers();

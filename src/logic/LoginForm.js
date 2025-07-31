@@ -26,7 +26,7 @@ export default function LoginForm() {
   }
 
   try {
-    const res = await axios.post('https://ev-charger-backend-l1c8.onrender.com/api/login', {
+    const res = await axios.post('http://localhost:3000/api/login', {
       username: username.value,
       password: password.value
     });

@@ -80,9 +80,9 @@ export default {
 
       try {
         if (this.id) {
-          await axios.put(`https://ev-charger-backend-l1c8.onrender.com/api/chargers/${this.id}`, chargerData, { headers });
+          await axios.put(`http://localhost:3000/api/chargers/${this.id}`, chargerData, { headers });
         } else {
-          await axios.post(`https://ev-charger-backend-l1c8.onrender.com/api/chargers`, chargerData, { headers });
+          await axios.post(`http://localhost:3000/api/chargers`, chargerData, { headers });
         }
 
         await Swal.fire({
