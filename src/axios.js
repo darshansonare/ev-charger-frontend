@@ -1,20 +1,19 @@
 // File: src/utils/axios.js
 import axios from 'axios';
 
-// Create instance
 const instance = axios.create({
-  baseURL: process.env.VUE_APP_SERVER_URL
+  baseURL: import.meta.env.VITE_API_BASE_URL, // uses the env variable
 });
 
-// Add token to headers dynamically before each request
-instance.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = token;
-  }
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+instance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default instance;
